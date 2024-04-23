@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priority Queue Visualizer</title>
+    <!-- Include Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+    <h1 class="text-3xl font-bold mb-4">Priority Queue Visualizer</h1>
+    <form id="queueForm" class="mb-8">
+        <div class="mb-4">
+            <label for="elementInput" class="block text-sm font-medium text-gray-700">Enter Elements (comma-separated):</label>
+            <input type="text" id="elementInput" name="elements" class="mt-1 p-2 border rounded-md w-full">
+        </div>
+        <div class="mb-4">
+            <label for="priorityInput" class="block text-sm font-medium text-gray-700">Enter Priorities (comma-separated):</label>
+            <input type="text" id="priorityInput" name="priorities" class="mt-1 p-2 border rounded-md w-full">
+        </div>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Create Priority Queue</button>
+    </form>
+    <div id="container" class="flex flex-wrap justify-center"></div>
+
+    <script>
+        // Function to render priority queue
+        function renderPriorityQueue(queue) {
+            const container = document.getElementById('container');
+            container.innerHTML = '';
+
+            queue.forEach((item, index) => {
+                const elementDiv = document.createElement('div');
+                elementDiv.classList.add('element', 'bg-white', 'border', 'border-gray-300', 'p-4', 'rounded-md', 'shadow-sm', 'm-4');
+                elementDiv.innerHTML = `<strong class="block">Task:</strong> ${item.value}<br><strong class="block">Priority:</strong> ${item.priority}`;
+                container.appendChild(elementDiv);
+            });
+        }
+
+        // Function to handle form submission
+        document.getElementById('queueForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            const elementsInput = document.getElementById('elementInput').value.trim();
+            const prioritiesInput = document.getElementById('priorityInput').value.trim();
+            if (elementsInput === '' || prioritiesInput === '') {
+                alert('Please enter both elements and priorities for the priority queue.');
+                return;
+            }
+            const elementsArray = elementsInput.split(',').map(element => element.trim());
+            const prioritiesArray = prioritiesInput.split(',').map(priority => parseInt(priority.trim()));
+            if (elementsArray.length !== prioritiesArray.length) {
+                alert('Number of elements must match number of priorities.');
+                return;
+            }
+            const priorityQueue = elementsArray.map((value, index) => ({ value, priority: prioritiesArray[index] }));
+            priorityQueue.sort((a, b) => a.priority - b.priority); // Sort by priority
+            renderPriorityQueue(priorityQueue);
+        });
+    </script>
+</body>
+</html>
